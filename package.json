@@ -1,0 +1,24 @@
+{
+    "name": "com.tsk.ess.fpcc",
+    "displayName": "TSK First Person Character Controller",
+    "description": "Free and light-weight first-person character base controllers for the Unity 2021.3+, using Cinemachine and the Input System packages (required). ",
+    "version": "1.0.0",
+    "unity": "2021.3",
+    "dependencies": {},
+    "author": {
+        "name": "TheSleepyKoala",
+        "email": "contact@humblegco.com",
+        "url": "https://github.com/Chizaruu"
+    },
+    "keywords": [
+        "unity",
+        "unity3d",
+        "fps",
+        "first person",
+        "character controller",
+        "controller",
+        "fps controller",
+        "first person controller"
+    ],
+    "repository": "https://github.com/TheSleepyKoala/com.tsk.ess.fpcc"
+}
