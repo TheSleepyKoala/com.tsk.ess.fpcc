@@ -54,9 +54,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
 
   private void Update()
   {
-   JumpAndGravity();
    GroundCheck();
-   Movement();
   }
 
   private void LateUpdate()
@@ -75,7 +73,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
    if (lookMagnitude < threshold)
     return;
 
-    float lookSpeed = rotationSpeed * deltaTimeMultiplier;
+   float lookSpeed = rotationSpeed * deltaTimeMultiplier;
 
    cameraTargetPitch += look.y * lookSpeed;
    rotationVelocity = look.x * lookSpeed;
@@ -87,10 +85,10 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
    transform.Rotate(Vector3.up * rotationVelocity);
   }
 
-  private static float ClampAngle(float angle, float min, float max)
+  private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
   {
-   angle = Mathf.Repeat(angle, 360f);
-   return Mathf.Deg2Rad * Mathf.Clamp(angle, min, max);
+   lfAngle %= 360f;
+   return Mathf.Clamp(lfAngle, lfMin, lfMax);
   }
  }
 }
