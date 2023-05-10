@@ -7,6 +7,10 @@ Open Source first-person character base controllers for Unity 2021.3+, using Cin
 - Use of Input System package
   - Keyboard and Mouse
 - Use of Cinemachine
+- Actions
+  - Walk
+  - Sprint
+  - Jump
 
 ## Install via Package Manager
 
