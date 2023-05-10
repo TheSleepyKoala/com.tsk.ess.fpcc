@@ -5,66 +5,98 @@ using UnityEngine.InputSystem;
 namespace TheSleepyKoala.Essentials.FirstPersonController
 {
  ///<summary>
- ///A script that handles the movement and camera control of a first person character.
+ ///A script that handles the Movement and camera control of a first person character.
  ///</summary>
- [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
+ [RequireComponent(typeof(PlayerInput))]
  public class FirstPersonController : MonoBehaviour
  {
-  #region Player Movement
-  [Header("Player")]
+  #region Components
+  [SerializeField, Tooltip("The rigidbody component attached to the player.")]
+  private Rigidbody rb;
+  [SerializeField, Tooltip("The player input script attached to the player.")]
+  private PlayerInput playerInput;
+  [SerializeField, Tooltip("The first person inputs script attached to the player.")]
+  private FirstPersonInputs firstPersonInputs;
+  #endregion
+
+  #region Ground Check
+  [SerializeField, Tooltip("The boolean that determines if the player is grounded or not.")]
+  private bool isGrounded;
+  [SerializeField, Tooltip("The layer mask that determines what is considered ground.")]
+  private LayerMask groundMask;
+
+  private const float groundCheckDistance = 0.75f;
+
+  // Sets isGrounded based on a raycast sent straight down from the player object
+  private void CheckGround()
+  {
+   Vector3 origin = transform.position - Vector3.up * (transform.localScale.y / 2);
+   Vector3 direction = Vector3.down;
+
+   if (Physics.Raycast(origin, direction, out RaycastHit hit, groundCheckDistance, groundMask))
+   {
+    isGrounded = true;
+   }
+   else
+   {
+    isGrounded = false;
+   }
+  }
+  #endregion
+
+  #region Jump
+  [Header("Jump")]
+  [SerializeField, Tooltip("The boolean that determines if the player can jump or not.")]
+  private bool enableJump = true;
+  [SerializeField, Tooltip("The force applied to the player when jumping.")]
+  private float jumpForce = 5f;
+
+  /// <summary>
+  /// Makes the player jump if the player is grounded.
+  /// </summary>
+  private void Jump()
+  {
+   rb.AddForce(0f, jumpForce, 0f, ForceMode.Impulse);
+   isGrounded = false;
+  }
+  #endregion
+
+  #region Movement
+  [Header("Movement")]
+  [SerializeField, Tooltip("The boolean that determines if the player can move or not.")]
+  private bool enableMovement = true;
+  [SerializeField, Tooltip("The boolean that determines if the player can sprint or not.")]
+  private bool enableSprint = true;
   [SerializeField, Tooltip("The walking speed of the player.")]
   private float walkSpeed = 3f;
   [SerializeField, Tooltip("The sprinting speed of the player.")]
   private float sprintSpeed = 6f;
-  [SerializeField, Tooltip("The rate at which the player's speed changes.")]
-  private float speedChangeRate = 10f;
-  private float currentSpeed;
-  
+  [SerializeField, Tooltip("The maximum velocity change of the player.")]
+  private float maxVelocityChange = 10f;
+  private Vector3 movementDirection;
+
   /// <summary>
   /// Moves the player based on the player's input.
   /// </summary>
   private void MovePlayer()
   {
+   Vector2 move = firstPersonInputs.Move;
+   Vector3 targetVelocity = new Vector3(move.x, 0f, move.y);
 
-  }
-  #endregion
-
-  #region Gravity
-  [SerializeField, Tooltip("The gravity affecting the player.")]
-  private float gravity = -12f;
-
-  /// <summary>
-  /// Applies gravity to the character controller's vertical velocity.
-  /// </summary>
-  private void ApplyGravity()
-  {
-   if (controller.isGrounded)
-   {
-    // If the controller is on the ground, reset the vertical velocity
-    // to prevent accumulating gravity over multiple frames.
-    Vector3 verticalVelocity = Vector3.down * controller.velocity.y;
-    controller.Move(verticalVelocity * Time.deltaTime);
-   }
+   if (enableSprint && firstPersonInputs.Sprint)
+    targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
    else
-   {
-    // Apply gravity to the controller's vertical velocity.
-    Vector3 gravityVector = Vector3.up * gravity;
-    controller.Move(gravityVector * Time.deltaTime);
-   }
-  }
-  #endregion
+    targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
 
-  #region Player Actions
-  [Header("Jump")]
-  [SerializeField, Tooltip("The height the player can jump.")]
-  private float jumpHeight = 2f;
-  [SerializeField, Tooltip("The time the player has to jump after leaving the ground.")]
-  private float jumpTimeout = 0.1f;
-  [SerializeField, Tooltip("The time the player has to land after jumping.")]
-  private float fallTimeout = 0.15f;
-  private float rotationVelocity;
-  private float jumpTimeoutDelta;
-  private float fallTimeoutDelta;
+   // Apply a force that attempts to reach our target velocity
+   Vector3 velocity = rb.velocity;
+   Vector3 velocityChange = targetVelocity - velocity;
+   velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+   velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+   velocityChange.y = 0f;
+
+   rb.AddForce(velocityChange, ForceMode.VelocityChange);
+  }
   #endregion
 
   #region Player Camera
@@ -82,6 +114,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
   [SerializeField, Tooltip("The multiplier for the deltaTime value used in camera rotation.")]
   private float deltaTimeMultiplier = 1f;
   private float cameraTargetPitch;
+  private float rotationVelocity;
   private const float threshold = 0.01f;
 
   /// <summary>
@@ -103,7 +136,6 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
    cameraTargetPitch = ClampAngle(cameraTargetPitch, bottomAngle, topAngle);
 
    head.transform.localRotation = Quaternion.AngleAxis(cameraTargetPitch, Vector3.right);
-
    transform.Rotate(Vector3.up * rotationVelocity);
   }
 
@@ -117,24 +149,20 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
   }
   #endregion
 
-  #region Components
-  [SerializeField, Tooltip("The character controller component attached to the player.")]
-  private CharacterController controller;
-  [SerializeField, Tooltip("The player input script attached to the player.")]
-  private PlayerInput playerInput;
-  [SerializeField, Tooltip("The first person inputs script attached to the player.")]
-  private FirstPersonInputs firstPersonInputs;
-  #endregion
-
-  private void Start()
-  {
-   jumpTimeoutDelta = jumpTimeout;
-   fallTimeoutDelta = fallTimeout;
-  }
-
   private void Update()
   {
-   ApplyGravity();
+   CheckGround();
+  }
+
+  private void FixedUpdate()
+  {
+   if (!enableMovement)
+    return;
+
+   MovePlayer();
+
+   if (enableJump && firstPersonInputs.Jump && isGrounded)
+    Jump();
   }
 
   private void LateUpdate()
