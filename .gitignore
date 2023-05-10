@@ -1,20 +1,6 @@
 .DS_Store
-.editorconfig
 
+*.md.meta
+LICENSE.meta
+package.json.meta
 
-/projects/**/.vscode/*
-/projects/**/Builds
-/projects/**/bin
-/projects/**/Library
-/projects/**/Logs
-/projects/**/obj
-/projects/**/Temp
-
-*.csproj
-*.sln
-*.code-workspace
-
-omnisharp.json
-
-TSKDoNotDelete.txt
-*.dwlt
