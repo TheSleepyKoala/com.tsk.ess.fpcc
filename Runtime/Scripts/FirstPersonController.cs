@@ -27,7 +27,6 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
 
         private const float groundCheckDistance = 0.75f;
 
-        // Sets isGrounded based on a raycast sent straight down from the player object
         private void CheckGround()
         {
             Vector3 origin = transform.position - Vector3.up * (transform.localScale.y / 2);
@@ -56,8 +55,11 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         /// </summary>
         private void Jump()
         {
-            rb.AddForce(0f, jumpForce, 0f, ForceMode.Impulse);
-            isGrounded = false;
+            if (firstPersonInputs.Jump && isGrounded)
+            {
+                rb.AddForce(0f, jumpForce, 0f, ForceMode.Impulse);
+                isGrounded = false;
+            }
         }
         #endregion
 
@@ -73,6 +75,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         private float sprintSpeed = 6f;
         [SerializeField, Tooltip("The maximum velocity change of the player.")]
         private float maxVelocityChange = 10f;
+        private float originalWalkSpeed;
         private Vector3 movementDirection;
 
         /// <summary>
@@ -83,7 +86,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
             Vector2 move = firstPersonInputs.Move;
             Vector3 targetVelocity = new Vector3(move.x, 0f, move.y);
 
-            if (enableSprint && firstPersonInputs.Sprint)
+            if (enableSprint && firstPersonInputs.Sprint && isGrounded && !isCrouching)
                 targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
             else
                 targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
@@ -96,6 +99,37 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
             velocityChange.y = 0f;
 
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        }
+        #endregion
+
+        #region Crouch
+        [Header("Crouch")]
+        [SerializeField, Tooltip("The boolean that determines if the player can crouch or not.")]
+        private bool enableCrouch = true;
+        [SerializeField, Tooltip("The height of the player when crouching.")]
+        private float crouchHeight = 0.5f;
+        [SerializeField, Tooltip("The speed modifier of the player when crouching.")]
+        private float crouchSpeedModifier = 0.5f;
+        private bool isCrouching;
+        private Vector3 originalScale;
+
+        /// <summary>
+        /// Makes the player crouch if the player is not crouching.
+        /// </summary>
+        private void Crouch()
+        {
+            if(firstPersonInputs.Crouch && !isCrouching && isGrounded)
+            {   
+                isCrouching = true;
+                transform.localScale = new Vector3(transform.localScale.x, crouchHeight, transform.localScale.z);
+                walkSpeed = originalWalkSpeed * crouchSpeedModifier;
+            }
+            else if(!firstPersonInputs.Crouch && isCrouching)
+            {
+                isCrouching = false;
+                transform.localScale = originalScale;
+                walkSpeed = originalWalkSpeed;
+            }
         }
         #endregion
 
@@ -149,16 +183,26 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         }
         #endregion
 
+        private void Start()
+        {
+            originalWalkSpeed = walkSpeed;
+            originalScale = transform.localScale;
+        } 
+
         private void FixedUpdate()
         {
             CheckGround();
+            
             if (!enableMovement)
                 return;
 
             MovePlayer();
 
-            if (enableJump && firstPersonInputs.Jump && isGrounded)
+            if (enableJump)
                 Jump();
+            
+            if (enableCrouch)
+                Crouch();
         }
 
         private void LateUpdate()

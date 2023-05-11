@@ -10,6 +10,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         [field: SerializeField] public Vector2 Look { get; private set; }
         [field: SerializeField] public bool Jump { get; private set; }
         [field: SerializeField] public bool Sprint { get; private set; }
+        [field: SerializeField] public bool Crouch { get; private set; }
 
         [Header("Mouse Settings")]
         [SerializeField] private bool lockCursor = true;
@@ -34,6 +35,14 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
                 Sprint = true;
             else if (context.canceled)
                 Sprint = false;
+        }
+
+        public void CrouchInput(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                Crouch = true;
+            else if (context.canceled)
+                Crouch = false;
         }
 
         private void OnApplicationFocus(bool hasFocus) => Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;

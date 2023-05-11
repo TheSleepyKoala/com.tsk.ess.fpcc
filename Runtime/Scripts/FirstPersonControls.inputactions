@@ -1,5 +1,5 @@
 {
-    "name": "Controls",
+    "name": "FirstPersonControls",
     "maps": [
         {
             "name": "Player",
@@ -36,6 +36,15 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "474be2cc-afc7-438d-ba80-9cbf6cf0bf5b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "32b3e682-b9e9-4ae2-a2bb-035cf90311f9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -183,6 +192,17 @@
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "353dbd4b-93f1-4eb5-92d5-ab40a0575482",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Crouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
