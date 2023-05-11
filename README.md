@@ -1,6 +1,10 @@
 # TSK First Person Character Controller
 
+[![Discord](https://img.shields.io/discord/1106106269837819914?color=D1495B&logo=discord&logoColor=FFFFFF&style=flat)](https://discord.gg/VU8EhUY7bX)
+
 Open Source first-person character base controllers for Unity 2021.3+, using Cinemachine and the Input System packages.
+
+If you find my package useful, please consider giving it a Star 🌟 to show your support. Thank you!
 
 ## Features
 
