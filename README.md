@@ -10,7 +10,6 @@ If you have found this package to be useful, we kindly request that you consider
 
 - Control Schemes Supported:
   - Keyboard and Mouse
-- Use of Cinemachine
 - Actions
   - Walk
   - Sprint
