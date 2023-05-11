@@ -2,19 +2,23 @@
 
 [![Discord](https://img.shields.io/discord/1106106269837819914?color=D1495B&logo=discord&logoColor=FFFFFF&style=flat)](https://discord.gg/VU8EhUY7bX)
 
-Open Source first-person character base controllers for Unity 2021.3+, using Cinemachine and the Input System packages.
+TSK First Person Character Controller is an open-source Unity package that provides a base for first-person character controllers using Cinemachine and the Input System packages for Unity 2021.3+.  
 
-If you find my package useful, please consider giving it a Star 🌟 to show your support. Thank you!
+If you have found this package to be useful, we kindly request that you consider giving it a star 🌟 to show your support. Thank you!
 
 ## Features
 
-- Use of Input System package
+- Control Schemes Supported:
   - Keyboard and Mouse
 - Use of Cinemachine
 - Actions
   - Walk
   - Sprint
   - Jump
+  - Crouch
+- Compatibility with URP/HDRP Render Pipelines
+- Presets available via the Samples section in PackageManager
+- Settings configured with ScriptableObject for better management of the first-person controller.
 
 ## Install via Package Manager
 
