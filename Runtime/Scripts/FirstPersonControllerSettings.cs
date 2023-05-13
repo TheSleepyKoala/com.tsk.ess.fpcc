@@ -82,11 +82,8 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         [Tooltip("The maximum angle the camera can look down.")]
         public float bottomAngle = -90f;
 
-        [Tooltip("The speed at which the camera rotates.")]
-        public float rotationSpeed = 1f;
-
         [Tooltip("The multiplier for the deltaTime value used in camera rotation.")]
-        public float deltaTimeMultiplier = 1f;
+        public float mouseSensitivity = 2f;
         #endregion
     }
 }

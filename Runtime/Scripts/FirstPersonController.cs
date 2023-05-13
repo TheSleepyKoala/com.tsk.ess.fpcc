@@ -8,7 +8,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
     ///A script that handles the Movement and camera control of a first person character.
     ///</summary>
     [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
-    [RequireComponent(typeof(PlayerInput), typeof(FirstPersonInputs))]
+    [RequireComponent(typeof(PlayerInput))]
     public class FirstPersonController : MonoBehaviour
     {
         /*
@@ -280,9 +280,8 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
 
         [SerializeField, Tooltip("The transform of the player's head.")]
         private Transform head;
-        private float cameraTargetPitch;
-        private float rotationVelocity;
-        private const float threshold = 0.01f;
+        private float playerYaw,
+            cameraTargetPitch;
 
         /// <summary>
         /// Rotates the camera based on the player's input.
@@ -290,40 +289,23 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         private void CameraRotation()
         {
             Vector2 look = firstPersonInputs.Look;
-            float lookMagnitude = look.sqrMagnitude;
+            float mouseSensitivity = settings.mouseSensitivity;
 
-            if (lookMagnitude < threshold)
-                return;
+            playerYaw = transform.localEulerAngles.y + look.x * mouseSensitivity;
+            cameraTargetPitch += mouseSensitivity * look.y;
 
-            float lookSpeed = settings.rotationSpeed * settings.deltaTimeMultiplier;
-
-            cameraTargetPitch += look.y * lookSpeed;
-            rotationVelocity = look.x * lookSpeed;
-
-            cameraTargetPitch = ClampAngle(
+            cameraTargetPitch = Mathf.Clamp(
                 cameraTargetPitch,
                 settings.bottomAngle,
                 settings.topAngle
             );
 
-            head.transform.localRotation = Quaternion.AngleAxis(cameraTargetPitch, Vector3.right);
-            transform.Rotate(Vector3.up * rotationVelocity);
-        }
-
-        /// <summary>
-        /// Clamps an angle between a minimum and maximum value.
-        /// </summary>
-        private float ClampAngle(float lfAngle, float lfMin, float lfMax)
-        {
-            lfAngle %= 360f;
-            return Mathf.Clamp(lfAngle, lfMin, lfMax);
+            transform.localEulerAngles = new Vector3(0, playerYaw, 0);
+            head.transform.localEulerAngles = new Vector3(cameraTargetPitch, 0, 0);
         }
         #endregion
 
-        private void Start()
-        {
-            originalScale = transform.localScale;
-        }
+        private void Start() => originalScale = transform.localScale;
 
         private void FixedUpdate()
         {
