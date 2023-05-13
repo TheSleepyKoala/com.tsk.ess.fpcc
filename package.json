@@ -2,7 +2,7 @@
     "name": "com.tsk.ess.fpcc",
     "displayName": "TSK First Person Character Controller",
     "description": "Free and light-weight first-person character base controllers for the Unity 2021.3+, using Cinemachine and the Input System packages (required). ",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "unity": "2021.3",
     "license": "MIT",
     "dependencies": {

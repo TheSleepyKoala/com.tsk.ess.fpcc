@@ -26,8 +26,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.55, z: 0}
+  m_LocalRotation: {x: -0, y: 0.6637233, z: -0, w: 0.74797827}
+  m_LocalPosition: {x: 0, y: 1.8800001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -161,7 +161,6 @@ GameObject:
   - component: {fileID: 3233010519768310746}
   - component: {fileID: 691324364960420515}
   - component: {fileID: 5242595388136240285}
-  - component: {fileID: 8246332348779746273}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -220,23 +219,6 @@ MonoBehaviour:
   CameraRadius: 0.15
   DampingIntoCollision: 0
   DampingFromCollision: 0
---- !u!114 &8246332348779746273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7265885313752430286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
-  m_PivotOffset: {x: 0, y: 0, z: 1}
-  m_AmplitudeGain: 0.5
-  m_FrequencyGain: 0.3
-  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &8426244423302691543
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,10 +231,10 @@ GameObject:
   - component: {fileID: 4054236767524770515}
   - component: {fileID: 8443251994590918219}
   - component: {fileID: 5867265782077711097}
-  - component: {fileID: 8902642214005661630}
-  - component: {fileID: 194443209081831509}
-  - component: {fileID: 559812137959751514}
   - component: {fileID: 439717971944333575}
+  - component: {fileID: 8902642214005661630}
+  - component: {fileID: 719745337925644209}
+  - component: {fileID: 3447265253679851739}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -336,14 +318,28 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8426244423302691543}
   serializedVersion: 2
-  m_Mass: 5
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 1
+--- !u!136 &439717971944333575
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8426244423302691543}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8902642214005661630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +367,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 559812137959751514}
+      - m_Target: {fileID: 3447265253679851739}
         m_TargetAssemblyTypeName: TheSleepyKoala.Essentials.FirstPersonController.FirstPersonInputs,
           com.tsk.ess.fpcc
         m_MethodName: MoveInput
@@ -388,7 +384,7 @@ MonoBehaviour:
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 559812137959751514}
+      - m_Target: {fileID: 3447265253679851739}
         m_TargetAssemblyTypeName: TheSleepyKoala.Essentials.FirstPersonController.FirstPersonInputs,
           com.tsk.ess.fpcc
         m_MethodName: LookInput
@@ -405,7 +401,7 @@ MonoBehaviour:
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 559812137959751514}
+      - m_Target: {fileID: 3447265253679851739}
         m_TargetAssemblyTypeName: TheSleepyKoala.Essentials.FirstPersonController.FirstPersonInputs,
           com.tsk.ess.fpcc
         m_MethodName: JumpInput
@@ -422,7 +418,7 @@ MonoBehaviour:
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 559812137959751514}
+      - m_Target: {fileID: 3447265253679851739}
         m_TargetAssemblyTypeName: TheSleepyKoala.Essentials.FirstPersonController.FirstPersonInputs,
           com.tsk.ess.fpcc
         m_MethodName: SprintInput
@@ -437,12 +433,29 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 474be2cc-afc7-438d-ba80-9cbf6cf0bf5b
     m_ActionName: Player/Sprint[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3447265253679851739}
+        m_TargetAssemblyTypeName: TheSleepyKoala.Essentials.FirstPersonController.FirstPersonInputs,
+          com.tsk.ess.fpcc
+        m_MethodName: CrouchInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 32b3e682-b9e9-4ae2-a2bb-035cf90311f9
+    m_ActionName: Player/Crouch[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &194443209081831509
+--- !u!114 &719745337925644209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -455,26 +468,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 5867265782077711097}
+  capsuleCollider: {fileID: 439717971944333575}
   playerInput: {fileID: 8902642214005661630}
-  firstPersonInputs: {fileID: 559812137959751514}
-  isGrounded: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1
-  enableJump: 1
-  jumpForce: 5
-  enableMovement: 1
-  enableSprint: 1
-  walkSpeed: 5
-  sprintSpeed: 10
-  maxVelocityChange: 10
+  firstPersonInputs: {fileID: 3447265253679851739}
+  settings: {fileID: 11400000, guid: b1e561f01fe3f134b8c1f511fec5b70f, type: 2}
   mainCamera: {fileID: 963194227}
   head: {fileID: 8152861563063520099}
-  topAngle: 90
-  bottomAngle: -90
-  rotationSpeed: 1
-  deltaTimeMultiplier: 1
---- !u!114 &559812137959751514
+--- !u!114 &3447265253679851739
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -490,22 +490,9 @@ MonoBehaviour:
   <Look>k__BackingField: {x: 0, y: 0}
   <Jump>k__BackingField: 0
   <Sprint>k__BackingField: 0
+  <Crouch>k__BackingField: 0
   lockCursor: 1
   mouseLook: 1
---- !u!136 &439717971944333575
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8426244423302691543}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8883632445058500989
 GameObject:
   m_ObjectHideFlags: 0
