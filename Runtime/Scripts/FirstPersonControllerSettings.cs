@@ -68,7 +68,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         public bool enableCrouch = true;
 
         [Tooltip("The height of the player when crouching.")]
-        public float crouchHeight = 0.5f;
+        public float crouchScaleHeight = 0.5f;
 
         [Tooltip("The speed modifier of the player when crouching.")]
         public float crouchSpeedModifier = 0.5f;

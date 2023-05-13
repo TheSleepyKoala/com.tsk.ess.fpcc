@@ -41,6 +41,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         #region Ground Check
         private bool isGrounded,
             onSlope,
+            isSteepSlope,
             exitingSlope;
         private float delayTimer;
         private RaycastHit slopeHit;
@@ -78,11 +79,24 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         {
             float playerHeight = capsuleCollider.height / 2 + 0.3f; // 0.3f is the offset
 
+            isSteepSlope = false;
+
             if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight))
             {
                 // The rotation of the slopeHit normal is the angle of the slope.
                 float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                return angle < settings.maxSlopeAngle && angle != 0;
+
+                if (angle == 0)
+                    return false;
+
+                // If the angle is greater than the max slope angle, the player is on a steep slope.
+                if (angle > settings.maxSlopeAngle)
+                {
+                    isSteepSlope = true;
+                    return false;
+                }
+
+                return true;
             }
 
             return false;
@@ -102,7 +116,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         /// </summary>
         private void Jump()
         {
-            if (firstPersonInputs.Jump && !hasJumped && isGrounded)
+            if (firstPersonInputs.Jump && !hasJumped)
             {
                 rb.AddForce(0f, settings.jumpForce, 0f, ForceMode.Impulse);
                 exitingSlope = true;
@@ -123,84 +137,6 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         #endregion
 
         /*
-            This section handles the player's movement.
-            It first gets the player's input using the FirstPersonInputs script.
-            If sprinting is enabled, and the player is sprinting, the player will move at the sprint speed.
-            Otherwise, the player will move at the walk speed.
-            It then applies a force to the player's Rigidbody to move them.
-        */
-        #region Movement
-        private float originalWalkSpeed;
-
-        /// <summary>
-        /// Moves the player based on the player's input.
-        /// </summary>
-        private void MovePlayer()
-        {
-            Vector3 velocityChange = SpeedControl();
-
-            // If player is on a slope, apply slope multiplier to velocityChange.
-            if (onSlope && !exitingSlope)
-            {
-                rb.AddForce(
-                    GetSlopeMoveDirection(velocityChange) * settings.slopeMultiplier,
-                    ForceMode.VelocityChange
-                );
-
-                if (rb.velocity.y > 0)
-                    rb.AddForce(Vector3.down * 180f, ForceMode.Force);
-            }
-            else if (isGrounded)
-            {
-                rb.AddForce(velocityChange, ForceMode.VelocityChange);
-            }
-
-            rb.useGravity = !onSlope;
-        }
-
-        /// <summary>
-        /// The SpeedControl() function calculates the target velocity based on the player's input.
-        /// </summary>
-        private Vector3 SpeedControl()
-        {
-            Vector2 move = firstPersonInputs.Move;
-            Vector3 targetVelocity = new(move.x, 0f, move.y);
-
-            if (settings.enableSprint && firstPersonInputs.Sprint && isGrounded && !isCrouching)
-                targetVelocity =
-                    transform.TransformDirection(targetVelocity) * settings.sprintSpeed;
-            else
-                targetVelocity = transform.TransformDirection(targetVelocity) * settings.walkSpeed;
-
-            // Apply a force that attempts to reach target velocity
-            Vector3 velocity = rb.velocity;
-            Vector3 velocityChange = targetVelocity - velocity;
-            velocityChange.x = Mathf.Clamp(
-                velocityChange.x,
-                -settings.maxVelocityChange,
-                settings.maxVelocityChange
-            );
-            velocityChange.z = Mathf.Clamp(
-                velocityChange.z,
-                -settings.maxVelocityChange,
-                settings.maxVelocityChange
-            );
-            velocityChange.y = 0f;
-
-            return velocityChange;
-        }
-
-        /// <summary>
-        /// Calculates the slope factor based on the player's current height.
-        /// Note:
-        /// If creating a flat surface, the GameObject's rotation must be set to (0, 0, 0).
-        /// </summary>
-
-        private Vector3 GetSlopeMoveDirection(Vector3 velocityChange) =>
-            Vector3.ProjectOnPlane(velocityChange, slopeHit.normal);
-        #endregion
-
-        /*
             This section handles the player's crouch.
             If the player presses the crouch button and is currently on the ground, the player will crouch.
             The player's scale will be reduced, and their walk speed will be decreased based on the crouchSpeedModifier.
@@ -214,23 +150,120 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         /// </summary>
         private void Crouch()
         {
-            if (firstPersonInputs.Crouch && !isCrouching && isGrounded)
+            if (firstPersonInputs.Crouch && !isCrouching)
             {
                 isCrouching = true;
                 transform.localScale = new Vector3(
                     transform.localScale.x,
-                    settings.crouchHeight,
+                    settings.crouchScaleHeight,
                     transform.localScale.z
                 );
-                settings.walkSpeed = originalWalkSpeed * settings.crouchSpeedModifier;
+                capsuleCollider.height = capsuleCollider.height / 2f;
             }
             else if (!firstPersonInputs.Crouch && isCrouching)
             {
                 isCrouching = false;
                 transform.localScale = originalScale;
-                settings.walkSpeed = originalWalkSpeed;
+                capsuleCollider.height = capsuleCollider.height * 2f;
             }
         }
+        #endregion
+
+        /*
+            This section handles the player's movement.
+            It first gets the player's input using the FirstPersonInputs script.
+            If sprinting is enabled, and the player is sprinting, the player will move at the sprint speed.
+            Otherwise, the player will move at the walk speed.
+            It then applies a force to the player's Rigidbody to move them.
+        */
+        #region Movement
+        /// <summary>
+        /// Moves the player based on the player's input.
+        /// </summary>
+        private void MovePlayer()
+        {
+            if (isSteepSlope)
+            {
+                rb.AddForce(Vector3.down * 180f, ForceMode.VelocityChange);
+                return;
+            }
+
+            if (!isGrounded)
+            {
+                rb.useGravity = true;
+                return;
+            }
+
+            Vector3 velocityChange = SpeedControl();
+
+            // If player is on a slope, apply slope multiplier to velocityChange.
+            if (onSlope && !exitingSlope)
+            {
+                rb.AddForce(
+                    GetSlopeMoveDirection(velocityChange) * settings.slopeMultiplier,
+                    ForceMode.VelocityChange
+                );
+
+                if (rb.velocity.y > 0)
+                    rb.AddForce(Vector3.down * 180f, ForceMode.Force);
+
+                rb.useGravity = false;
+                return;
+            }
+
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+            rb.useGravity = true;
+        }
+
+        /// <summary>
+        /// The SpeedControl() function calculates the target velocity based on the player's input.
+        /// </summary>
+        private Vector3 SpeedControl()
+        {
+            Vector2 move = firstPersonInputs.Move;
+            Vector3 targetVelocity = new(move.x, 0f, move.y);
+
+            if (settings.enableSprint && firstPersonInputs.Sprint && !isCrouching)
+                targetVelocity =
+                    transform.TransformDirection(targetVelocity) * settings.sprintSpeed;
+            else if (isCrouching)
+                targetVelocity =
+                    transform.TransformDirection(targetVelocity)
+                    * settings.walkSpeed
+                    * settings.crouchSpeedModifier;
+            else
+                targetVelocity = transform.TransformDirection(targetVelocity) * settings.walkSpeed;
+
+            // Apply a force that attempts to reach target velocity
+            Vector3 velocity = rb.velocity;
+            Vector3 velocityChange = targetVelocity - velocity;
+            velocityChange.x = ClampVelocityChange(velocityChange.x);
+            velocityChange.z = ClampVelocityChange(velocityChange.z);
+            velocityChange.y = 0f;
+
+            return velocityChange;
+        }
+
+        /// <summary>
+        /// Clamps the velocity change to the max velocity change.
+        /// </summary>
+        private float ClampVelocityChange(float velocityChange)
+        {
+            return Mathf.Clamp(
+                velocityChange,
+                -settings.maxVelocityChange,
+                settings.maxVelocityChange
+            );
+        }
+
+        /// <summary>
+        /// Calculates the slope factor based on the player's current height.
+        /// Note:
+        /// If creating a flat surface, the GameObject's rotation must be set to (0, 0, 0).
+        /// </summary>
+
+        private Vector3 GetSlopeMoveDirection(Vector3 velocityChange) =>
+            Vector3.ProjectOnPlane(velocityChange, slopeHit.normal);
         #endregion
 
         /*
@@ -289,7 +322,6 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
 
         private void Start()
         {
-            originalWalkSpeed = settings.walkSpeed;
             originalScale = transform.localScale;
         }
 
@@ -301,6 +333,9 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
                 return;
 
             MovePlayer();
+
+            if (!isGrounded)
+                return;
 
             if (settings.enableJump)
                 Jump();

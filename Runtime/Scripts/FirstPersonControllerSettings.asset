@@ -17,10 +17,10 @@ MonoBehaviour:
     m_Bits: 1
   groundCheckDistance: 0.75
   timeBeforeNotGrounded: 0.3
-  maxSlopeAngle: 45
+  maxSlopeAngle: 55
   slopeMultiplier: 0.8
   enableJump: 1
-  jumpForce: 5
+  jumpForce: 15
   jumpCooldown: 0.3
   enableMovement: 1
   walkSpeed: 5
@@ -28,7 +28,7 @@ MonoBehaviour:
   sprintSpeed: 10
   maxVelocityChange: 10
   enableCrouch: 1
-  crouchHeight: 0.5
+  crouchScaleHeight: 0.5
   crouchSpeedModifier: 0.5
   topAngle: 90
   bottomAngle: -90
