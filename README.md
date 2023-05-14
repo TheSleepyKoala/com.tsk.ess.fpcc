@@ -6,6 +6,8 @@ TSK First Person Character Controller is an open-source Unity package that provi
 
 If you have found this package to be useful, we kindly request that you consider giving it a star 🌟 to show your support. Thank you!
 
+[![Everything Is AWESOME](https://i.ytimg.com/vi_webp/rPUzhKfpvPg/maxresdefault.webp)](https://youtu.be/rPUzhKfpvPg)
+
 ## Features
 
 - Control Schemes Supported:
