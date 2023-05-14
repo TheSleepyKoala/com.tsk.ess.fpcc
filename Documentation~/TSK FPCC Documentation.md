@@ -54,18 +54,20 @@ You must modify the "FirstPersonInputs" script to add a new input action. Here a
 
 1. Open the "FirstPersonInputs" script in your code editor.
 2. Locate the "Input Values" region in the script. This is where all the input values for the character controller are defined.
-3. Define a new input value by adding a new line of code in the "Input Values" region. For example, if you want to add a new input value for "Interact", you can add the following code:
-   ![code](images/Picture1.png)
-4. Create a new method to handle the input action. For example, to handle the "Interact" input action, you can add the following code:
-   ![code](images/Picture2.png)
-5. Open the “FirstPersonControls” inputactions in the Scripts folder and add an action called “Interact” in the InputActions window and assign a key binding. (Make sure to click Save Asset)
+3. Define a new input value by adding a new line of code in the "Input Values" region. For example, if you want to add a new input value for "Interact", you can add the following code:  
+![Picture1](https://github.com/TheSleepyKoala/com.tsk.ess.fpcc/assets/59434446/66346b92-ef34-4025-a077-a43d7d80f576)
+4. Create a new method to handle the input action. For example, to handle the "Interact" input action, you can add the following code:  
+![Picture2](https://github.com/TheSleepyKoala/com.tsk.ess.fpcc/assets/59434446/71148c9b-d353-402d-b8fb-6349de0a0db4)
+6. Open the “FirstPersonControls” in
+putactions in the Scripts folder and add an action called “Interact” in the InputActions window and assign a key binding. (Make sure to click Save Asset)
 6. Open the Player prefab in the “Prefabs” folder, click the “Events” dropdown, followed by the Player dropdown.
-7. Here, we need to press the + icon on the Interact Event,
-   ![code](images/Picture3.png)
-8. Drag into the Object field our Player prefab.
-   ![code](images/Picture4.png)
-9. Click the “No Function” dropdown, and navigate to our “OnInteract” CallbackContext, and select "InteractInput" from the dropdown.
-   ![code](images/Picture5.png)
+7. Here, we need to press the + icon on the Interact Event,  
+![Picture3](https://github.com/TheSleepyKoala/com.tsk.ess.fpcc/assets/59434446/7573ed94-7267-444f-98e6-97f864fa4388)
+8. Drag into the Object field our Player prefab.  
+![Picture4](https://github.com/TheSleepyKoala/com.tsk.ess.fpcc/assets/59434446/09d81763-d90c-4419-bd14-207e68c83edb)
+9. Click the “No Function” dropdown, and navigate to our “OnInteract” CallbackContext, and select "InteractInput" from the dropdown.  
+![Picture5](https://github.com/TheSleepyKoala/com.tsk.ess.fpcc/assets/59434446/b876192e-ff04-4e46-9aa8-060f5369d21a)
+ 
 10. That's it! You have successfully added a new input action for the TSK First Person Character Controller.
 
 ## URP/HDRP COMPATIBILITY
