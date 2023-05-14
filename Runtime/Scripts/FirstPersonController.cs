@@ -184,7 +184,7 @@ namespace TheSleepyKoala.Essentials.FirstPersonController
         {
             if (isSteepSlope)
             {
-                rb.AddForce(Vector3.down * 180f, ForceMode.VelocityChange);
+                rb.AddForce(Vector3.down * 180f, ForceMode.Force);
                 return;
             }
 
